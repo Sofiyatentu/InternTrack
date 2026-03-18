@@ -30,11 +30,20 @@ const loginUser = async (req, res) => {
   const existingUser = await User.findOne({ email });
   if (!existingUser)
     return res.status(404).json({ message: "Email doesn't exist." });
-  console.log(existingUser);
+
   const isMatch = await bcrypt.compare(password, existingUser.password);
   if (!isMatch)
     return res.status(403).json({ message: "Invalid credentials." });
-  return res.status(200).json({ message: "Logged in successfully." });
+  return res
+    .status(200)
+    .json({
+      data: {
+        name: existingUser.name,
+        email: existingUser.email,
+        age: existingUser.age,
+      },
+      message: "Logged in successfully.",
+    });
 };
 
 module.exports = { registerUser, loginUser };

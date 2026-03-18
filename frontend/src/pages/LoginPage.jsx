@@ -10,9 +10,24 @@ function LoginPage() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    console.log(e);
+    try {
+      const response = await fetch("http://localhost:5000/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+
+        body: JSON.stringify(formData),
+      });
+      if (response.status === 200) {
+        alert("Login succesful");
+      }
+      console.log(await response.json());
+    } catch (error) {
+      console.error("Login failed", error);
+    }
   }
 
   return (
