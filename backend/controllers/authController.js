@@ -13,9 +13,12 @@ const registerUser = async (req, res) => {
     const newUser = new User({ name, email, age, password: hashedPassword });
     await newUser.save();
     return res.status(201).json({
-      name: newUser.name,
-      age: newUser.age,
-      email: newUser.email,
+      data: {
+        name: newUser.name,
+        age: newUser.age,
+        email: newUser.email,
+      },
+      message: "Registered successfully",
     });
   } catch (error) {
     console.log(error);
@@ -34,16 +37,14 @@ const loginUser = async (req, res) => {
   const isMatch = await bcrypt.compare(password, existingUser.password);
   if (!isMatch)
     return res.status(403).json({ message: "Invalid credentials." });
-  return res
-    .status(200)
-    .json({
-      data: {
-        name: existingUser.name,
-        email: existingUser.email,
-        age: existingUser.age,
-      },
-      message: "Logged in successfully.",
-    });
+  return res.status(200).json({
+    data: {
+      name: existingUser.name,
+      email: existingUser.email,
+      age: existingUser.age,
+    },
+    message: "Logged in successfully.",
+  });
 };
 
 module.exports = { registerUser, loginUser };
